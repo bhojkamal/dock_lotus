@@ -11,12 +11,17 @@ networks:
   mail:
     name: mail
     driver: bridge
+  mariadb:
+    name: mariadb
+    driver: bridge
 
 volumes:
   postgres_data:
     name: postgres_data
   redis_data:
     name: redis_data
+  mariadb_data:
+    name: mariadb_data
 
 services:
   traefik:
@@ -62,6 +67,26 @@ services:
       - "traefik.enable=false"
     networks:
       - postgres
+      - traefik
+
+  mariadb:
+    image: mariadb:latest
+    container_name: "mariadb"
+    depends_on:
+      - traefik
+    volumes:
+      - mariadb_data:/var/lib/mysql:rw
+    ports:
+      - ${MARIADB_PORT:-3306}:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASS}
+      - MYSQL_DATABASE=${MYSQL_DB:-default_db}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASS}
+    labels:
+      - "traefik.enable=false"
+    networks:
+      - mariadb
       - traefik
 
   redis:

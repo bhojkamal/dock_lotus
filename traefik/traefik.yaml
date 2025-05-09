@@ -29,6 +29,14 @@ entryPoints:
   websecure:
     address: :443
 
+certificatesResolvers:
+  myresolver:
+    acme:
+      email: bhojkamal@yahoo.com
+      storage: /letsencrypt/acme.json
+      httpChallenge:
+        entryPoint: web
+
 ################################################################
 # Traefik logs configuration
 ################################################################

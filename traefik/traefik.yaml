@@ -28,6 +28,8 @@ entryPoints:
 
   websecure:
     address: :443
+  traefik:
+    address: ":8080"
 
 certificatesResolvers:
   myresolver:
@@ -72,7 +74,7 @@ accessLog:
 # Enable API (insecure) and dashboard
 #
 api:
-  insecure: false
+  insecure: true
   dashboard: true
 
 ################################################################

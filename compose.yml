@@ -11,6 +11,9 @@ networks:
   mail:
     name: mail
     driver: bridge
+  whoami:
+    name: whoami
+    driver: bridge
 
 volumes:
   postgres_data:
@@ -32,7 +35,7 @@ services:
     volumes:
       - ./data/traefik/logs:/var/log/traefik:rw
       - ./traefik/dynamic/dynamic-conf.yaml:/etc/traefik/dynamic-conf.yaml:ro
-      - ./traefik/traefik.yaml:/etc/traefik/traefik.yaml:ro
+      - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
       - ./traefik/letsencrypt/acme.json:/letsencrypt/acme.json
       - /var/run/docker.sock:/var/run/docker.sock:ro
     labels:
@@ -92,4 +95,18 @@ services:
       - "traefik.http.services.mail.loadbalancer.server.port=8025"
     networks:
       - mail
+      - traefik
+
+  whoami:
+    container_name: whoami
+    image: traefik/whoami
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.${DOMAIN}`)"
+      - "traefik.http.routers.whoami.entrypoints=websecure"
+      - "traefik.http.routers.whoami.tls=true"
+      - "traefik.http.routers.whoami.tls.certresolver=myresolver"
+      - "traefik.http.services.whoami.loadbalancer.server.port=80"
+    networks:
+      - whoami
       - traefik

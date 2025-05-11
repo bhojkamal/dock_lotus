@@ -24,7 +24,7 @@ certificatesResolvers:
   myresolver:
     acme:
       email: bhojkamal@yahoo.com
-      storage: /letsencrypt/acme.json
+      storage: /etc/traefik/acme/acme.json
       httpChallenge:
         entryPoint: web
 

@@ -36,7 +36,7 @@ services:
       - ./data/traefik/logs:/var/log/traefik:rw
       - ./traefik/dynamic/dynamic-conf.yaml:/etc/traefik/dynamic-conf.yaml:ro
       - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
-      - ./traefik/letsencrypt/acme.json:/letsencrypt/acme.json
+      - ./traefik/letsencrypt/acme.json:/etc/traefik/acme/acme.json
       - /var/run/docker.sock:/var/run/docker.sock:ro
     labels:
       - "traefik.enable=true"

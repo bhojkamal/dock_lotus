@@ -55,7 +55,7 @@ services:
     depends_on:
       - traefik
     volumes:
-      - postgres_data:/var/lib/postgresql/data:rw
+      - postgres_data:/var/lib/postgresql:rw
     ports:
       - ${POSTGRES_PORT:-5432}:5432
     environment:

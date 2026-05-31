@@ -54,6 +54,8 @@ services:
     container_name: "postgres"
     depends_on:
       - traefik
+    # Raise from default 100. PgBouncer session pools + 100 tenants needs headroom.
+    command: ["postgres", "-c", "max_connections=${POSTGRES_MAX_CONNECTIONS:-200}"]
     volumes:
       - postgres_data:/var/lib/postgresql:rw
     ports:
@@ -68,6 +70,22 @@ services:
     networks:
       - postgres
       - traefik
+
+  pgbouncer:
+    image: edoburu/pgbouncer:latest
+    container_name: "pgbouncer"
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    ports:
+      - ${PGBOUNCER_PORT:-6432}:6432
+    volumes:
+      - ./pgbouncer/pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini:ro
+      - ./pgbouncer/userlist.txt:/etc/pgbouncer/userlist.txt:ro
+    labels:
+      - "traefik.enable=false"
+    networks:
+      - postgres
 
   mariadb:
     image: mariadb:latest

@@ -16,8 +16,6 @@ networks:
     driver: bridge
 
 volumes:
-  pgbouncer_tmp:
-    driver: local
   postgres_data:
     name: postgres_data
   redis_data:
@@ -82,7 +80,8 @@ services:
     ports:
       - ${PGBOUNCER_PORT:-6432}:6432
     volumes:
-      - pgbouncer_tmp:/tmp
+      - type: tmpfs
+        target: /tmp
       - ./pgbouncer/pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini:ro
       - ./pgbouncer/userlist.txt:/etc/pgbouncer/userlist.txt:ro
     labels:
